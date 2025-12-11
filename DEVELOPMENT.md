@@ -3,8 +3,8 @@
 ## 🎯 How to Avoid Conflicts
 
 ### 1. **Each Developer Works in Their Own Module**
-- **Dev 1**: Only modifies `src/summarization/`
-- **Dev 2**: Only modifies `src/quiz/`
+- **Yujin**: Only modifies `src/summarization/`
+- **Layaanee**: Only modifies `src/quiz/`
 - **Dev 3**: Only modifies `src/web/`
 - **Dev 4**: Only modifies `tests/` and docs
 
