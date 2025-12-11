@@ -8,10 +8,11 @@ An intelligent tool that transforms lecture notes into summaries, bullet points,
 
 | Developer | Module | Files | Status |
 |-----------|--------|-------|--------|
-| **Dev 1** | Summarization | `src/summarization/` | To Do |
+| **Yujin** | Summarization | `src/summarization/` | To Do |
 | **LAYAANEE** | Quiz Generation | `src/quiz/` | To Do |
 | **Dev 3** | Web Interface | `src/web/` | To Do |
-| **Dev 4** | Testing & Docs | `tests/`, `docs/` | To Do |
+| **Milo** | Testing & Docs | `tests/`, `docs/` | To Do |
+| **Dev 5** | Export Summary and Quiz | `export/`| To Do |
 
 ## 📁 Project Structure
 
@@ -19,6 +20,10 @@ An intelligent tool that transforms lecture notes into summaries, bullet points,
 ai-note-summarizer/
 ├── src/
 │   ├── __init__.py
+│   │
+│   ├── export/                 # Dev 5: Export Module
+│   │   └── __init__.py
+│   │
 │   ├── summarization/          # Dev 1: Summarization Module
 │   │   ├── __init__.py
 │   │   ├── summarizer.py       # Main summarization logic
