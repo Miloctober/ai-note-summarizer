@@ -6,7 +6,8 @@
 - **Yujin**: Only modifies `src/summarization/`
 - **Layaanee**: Only modifies `src/quiz/`
 - **Dev 3**: Only modifies `src/web/`
-- **Dev 4**: Only modifies `tests/` and docs
+- **Milo**: Only modifies `tests/` and docs
+- **Dev 5**: Only modifies `export/`
 
 ### 2. **Shared Code Lives in Specific Places**
 - **Config**: `config/config.py` (discuss changes in team)
