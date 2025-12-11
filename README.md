@@ -9,7 +9,7 @@ An intelligent tool that transforms lecture notes into summaries, bullet points,
 | Developer | Module | Files | Status |
 |-----------|--------|-------|--------|
 | **Dev 1** | Summarization | `src/summarization/` | To Do |
-| **Dev 2** | Quiz Generation | `src/quiz/` | To Do |
+| **LAYAANEE** | Quiz Generation | `src/quiz/` | To Do |
 | **Dev 3** | Web Interface | `src/web/` | To Do |
 | **Dev 4** | Testing & Docs | `tests/`, `docs/` | To Do |
 
