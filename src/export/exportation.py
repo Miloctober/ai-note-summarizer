@@ -1,3 +1,6 @@
+from src.summarization import Summarizer, SummaryOutput
+from src.quiz import QuizGenerator, QuizOutput
+
 def export_results(self, summary: SummaryOutput, quiz: QuizOutput, format: str) -> str:
     """
     Export results in the specified format.
