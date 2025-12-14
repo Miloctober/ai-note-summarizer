@@ -15,6 +15,8 @@ class Exportation:
             summary: SummaryOutput object to export
             quiz: QuizOutput object to export
             format: Export format ("pdf", "json", "html", etc.)
+
+        Format organisation:
                 
         Returns:
             Path to exported file or file content as string
@@ -22,6 +24,7 @@ class Exportation:
         Raises:
             ValueError: If format is not supported
         """
+    def 
         
     
     pass
