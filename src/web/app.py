@@ -23,5 +23,8 @@ class WebApp:
         Raises:
             ValueError: If text is empty or too short
         """
+        # Milo: N'oublie pas de faire d'appeller ma fonction pour l'exportation! 
+        # Tu dois t'assurer que dans la fonction export_results tu précises bien le format et si c'est un quiz 
+        # ou un résumé :) Bon courage !
         pass
     

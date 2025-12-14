@@ -9,10 +9,14 @@ An intelligent tool that transforms lecture notes into summaries, bullet points,
 | Developer | Module | Files | Status |
 |-----------|--------|-------|--------|
 | **Yujin** | Summarization | `src/summarization/` | To Do |
-| **LAYAANEE** | Quiz Generation | `src/quiz/` | To Do |
-| **Dev 3** | Web Interface | `src/web/` | To Do |
+| **LAYAANEE** | Quiz Generation | `src/quiz/` | Done! |
+| **Evan** | Web Interface | `src/web/` | To Do |
 | **Milo** | Testing & Docs | `tests/`, `docs/` | To Do |
-| **Dev 5** | Export Summary and Quiz | `export/`| To Do |
+| **Milo** | Export Summary and Quiz | `export/`| To Do |
+| **Dev 6** | Video transcription for Mediaserver | `transcript/`| To Do |
+| **Dev 7** | Ask AI about your notes | `askai/`| To Do |
+| **Dev 8** | Database with SQL and json? | `database/`| To Do |
+
 
 ## 📁 Project Structure
 
