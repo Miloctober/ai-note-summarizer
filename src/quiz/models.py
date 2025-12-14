@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
+MODEL_NAME = "llama3:8b"
 
 @dataclass
 class QuizQuestion:
