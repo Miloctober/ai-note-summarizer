@@ -16,6 +16,8 @@ An intelligent tool that transforms lecture notes into summaries, bullet points,
 | **Dev 6** | Video transcription for Mediaserver | `transcript/`| To Do |
 | **Dev 7** | Ask AI about your notes | `askai/`| To Do |
 | **Dev 8** | Database with SQL and json? | `database/`| To Do |
+| **LAYAANEE** | Conversion en long string (depuis transcription, polycopié ou slide) | `tolongstring/`| To Do |
+
 
 
 ## 📁 Project Structure
