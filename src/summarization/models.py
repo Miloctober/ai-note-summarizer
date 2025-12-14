@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-
+# YuJin t'es super sympa t'es super fort on t'aime fort ^^
+# BON COURAGE AAAAAAAH
 
 @dataclass
 class SummaryOutput:
