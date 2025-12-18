@@ -339,7 +339,6 @@ class Exportation:
 
     def _export_to_html(self, summary: SummaryOutput = None, quiz: QuizOutput = None, hide_answers: bool = False) -> str:
         """Export results to HTML format."""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # JavaScript for answer toggle
         toggle_script = """
@@ -413,12 +412,6 @@ class Exportation:
             font-size: 2.5rem;
             font-weight: bold;
             margin: 0;
-        }}
-        
-        .timestamp {{
-            margin-top: 10px;
-            font-size: 1rem;
-            opacity: 0.9;
         }}
         
         .main-content {{
@@ -744,7 +737,6 @@ class Exportation:
 
         <div class="header">
             <h1>📄 AI Summary & Quiz Export</h1>
-            <div class="timestamp">Generated on: {timestamp}</div>
         </div>
         <div class="main-content">"""
         
