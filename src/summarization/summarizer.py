@@ -1,5 +1,5 @@
 import re
-from models import SummaryOutput
+from .models import SummaryOutput
 from ollama import Client
 import sys
 

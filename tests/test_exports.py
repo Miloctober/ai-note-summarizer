@@ -13,6 +13,7 @@ def create_test_data():
     """Create sample test data."""
     # Create sample summary
     summary = SummaryOutput(
+        title="Sample Summary on Machine Learning",
         summary="This is a test summary about machine learning and artificial intelligence.",
         bullet_points=[
             "Machine learning is a subset of AI",
@@ -21,7 +22,8 @@ def create_test_data():
         ],
         key_concepts=["AI", "ML", "Neural Networks", "Training Data"],
         text_length=150,
-        processing_time=2.5
+        processing_time=2.5,
+        source=["Source 1: AI Textbook", "Source 2: ML Research Paper"]
     )
     
     # Create sample quiz

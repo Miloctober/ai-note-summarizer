@@ -49,8 +49,6 @@ class Exportation:
             raise ValueError(f"Unsupported export format: {format}")
 
 
-
-
     def _export_to_pdf(self, summary: SummaryOutput = None, quiz: QuizOutput = None) -> str:
         """Export results to PDF format."""
         
@@ -104,6 +102,23 @@ class Exportation:
             pdf.ln(5)
             
 
+            if summary.title:
+                pdf.set_fill_color(233, 236, 239)  # Light gray
+                pdf.set_text_color(0, 0, 0)
+                pdf.set_font('Arial', 'B', 14)
+                pdf.cell(0, 10, 'Title:', 0, 1, 'L', True)
+                pdf.ln(2)
+
+                pdf.set_fill_color(255, 255, 255)
+                pdf.set_text_color(70, 70, 70)
+                pdf.set_font('Arial', '', 11)
+                if isinstance(summary.title, list):
+                    title_text = summary.title[0]
+                else:
+                    title_text = summary.title
+                pdf.multi_cell(0, 6, title_text, 1, 'L', True)
+                pdf.ln(5)
+            
             # Bullet points
             if summary.bullet_points:
                 pdf.set_fill_color(232, 244, 248)  # Light blue
@@ -139,6 +154,18 @@ class Exportation:
                 pdf.multi_cell(0, 6, concepts_text, 1, 'L', True)
                 pdf.ln(5)
             
+            if summary.source:
+                pdf.set_fill_color(233, 236, 239)  # Light gray
+                pdf.set_text_color(0, 0, 0)
+                pdf.set_font('Arial', 'B', 14)
+                pdf.cell(0, 10, 'Source:', 0, 1, 'L', True)
+                pdf.ln(2)
+
+                pdf.set_fill_color(255, 255, 255)
+                pdf.set_text_color(70, 70, 70)
+                pdf.set_font('Arial', '', 11)
+                pdf.multi_cell(0, 6, summary.source, 1, 'L', True)
+                pdf.ln(5)
 
             # Metadata box
             pdf.set_fill_color(241, 243, 244)  # Light gray
@@ -175,6 +202,11 @@ class Exportation:
             
             # Quiz questions
             for i, question in enumerate(quiz.questions, 1):
+                                
+                # Difficulty badge
+                pdf.set_font('Arial', 'I', 9)
+                pdf.cell(0, 5, f'Difficulty: {question.difficulty.upper()}', 0, 1, 'L', True)
+                pdf.ln(5)
                 # Question header with difficulty color
                 if question.difficulty == 'easy':
                     pdf.set_fill_color(212, 237, 218)  # Light green
@@ -212,11 +244,7 @@ class Exportation:
                 pdf.set_text_color(21, 87, 36)
                 pdf.set_font('Arial', 'B', 11)
                 pdf.cell(0, 7, f'Answer: {question.answer}', 0, 1, 'L', True)
-                
-                # Difficulty badge
-                pdf.set_font('Arial', 'I', 9)
-                pdf.cell(0, 5, f'Difficulty: {question.difficulty.upper()}', 0, 1, 'L', True)
-                pdf.ln(5)
+
         
         # If no content was added (both summary and quiz are None)
         if not summary and not quiz:
