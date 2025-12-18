@@ -37,12 +37,18 @@ def create_test_data():
             answer="Deep learning",
             options=["Machine learning", "Deep learning", "Data mining", "Statistical analysis"],
             difficulty="hard"
+        ),
+        QuizQuestion(
+            question="Why is Jesus so cool?",
+            answer="I'm his dad",
+            options=["Because he was born by God in order to transcend Humanity", "Croissant", "I'm his dad"],
+            difficulty="easy"
         )
     ]
     
     quiz = QuizOutput(
         questions=questions,
-        total_questions=2,
+        total_questions=3,
         source_text="Sample text about machine learning and AI techniques."
     )
     
