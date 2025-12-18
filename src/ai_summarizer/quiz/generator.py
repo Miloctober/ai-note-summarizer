@@ -1,4 +1,4 @@
-from src.quiz.models import QuizOutput, QuizQuestion, MODEL_NAME
+from ai_summarizer.quiz.models import QuizOutput, QuizQuestion, MODEL_NAME
 import random
 import ollama
 import json

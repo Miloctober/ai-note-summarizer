@@ -9,7 +9,7 @@ import tempfile
 import os
 from datetime import datetime
 from typing import List, Dict
-from src.quiz.models import QuizOutput, QuizQuestion
+from ai_summarizer.quiz.models import QuizOutput, QuizQuestion
 
 class AnkiExporter:
     """Exports QuizOutput to Anki .apkg format."""

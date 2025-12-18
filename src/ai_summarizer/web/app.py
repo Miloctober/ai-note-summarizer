@@ -1,5 +1,5 @@
-from src.summarization import Summarizer, SummaryOutput
-from src.quiz import QuizGenerator, QuizOutput
+from ai_summarizer.summarization.summarizer import Summarizer, SummaryOutput
+from ai_summarizer.quiz.generator import QuizGenerator, QuizOutput
 
 
 class WebApp:

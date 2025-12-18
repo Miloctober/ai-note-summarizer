@@ -7,8 +7,8 @@
 
 import sys
 import io
-from src.tolongstring.pdf_to_string import pdf_bytes_to_text_string
-from src.quiz.generator import QuizGenerator
+from ai_summarizer.tolongstring.pdf_to_string import pdf_bytes_to_text_string
+from ai_summarizer.quiz.generator import QuizGenerator
 
 
 if len(sys.argv) != 2:
