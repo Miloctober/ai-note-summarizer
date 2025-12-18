@@ -1,4 +1,4 @@
-from models import QuizOutput, QuizQuestion, MODEL_NAME
+from src.quiz.models import QuizOutput, QuizQuestion, MODEL_NAME
 import random
 import ollama
 import json
@@ -28,7 +28,7 @@ class QuizGenerator:
 
 		for opt in options:
 			if isinstance(opt, str):								# check if the option is a string
-				tmp = opt.strip()									# remove all whitespaces at the beginning and at the end of the string
+				tmp = opt.strip().replace(".", "")					# remove all whitespaces at the beginning and at the end of the string
 				if (tmp and (tmp not in cleaned_options)):			# check if there is already an instance of the object in the final list
 					cleaned_options.append(tmp)						# add the object to the list
 
@@ -118,6 +118,8 @@ class QuizGenerator:
 				'{ "questions": [ { "question": str, "answer": str, "options": [str, str, str, str], '
 				'"difficulty": "easy" | "medium" | "hard", "keywords": [str, str, str] } ] }\n'
 				"Use only facts from the source. keep questions clear and non-overlapping. "
+				"Ignore page numbers, headers/footers, boilerplate disclaimers, tables of contents, and formatting artifacts (e.g., 'Page 1/10', timestamps, URLs, references, hyphenated line breaks). "
+   				"Use only sentences that convey instructional facts; skip fragments or repeated noise text. "
 				"Always provide at least 4 options including the correct answer."
 				f"Avoid overlapping with these already asked topics: {summary}."
 				"Don't put the answer of the question in the question"
@@ -142,7 +144,7 @@ class QuizGenerator:
 			
 			for q in payload.get("questions", []):										# go through the generated questions
 				q_text = str(q.get("question") or " ").strip()							# extract and parse the question
-				answer = str(q.get("answer") or " ").strip()							# extract and parse the answer
+				answer = str(q.get("answer") or " ").strip().replace(".", "")			# extract and parse the answer
 				difficulty = str(q.get("difficulty") or "medium").strip().lower()		# extract and parse the difficulty, set it to 'medium' if there is an error
 				if (difficulty not in ["easy", "medium", "hard"]):
 					difficulty = "medium"

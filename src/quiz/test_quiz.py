@@ -1,6 +1,6 @@
 from generator import QuizGenerator
 from test_text import test_text
-from models import MODEL_NAME
+from src.quiz.models import QuizOutput, QuizQuestion, MODEL_NAME
 
 for i in range (1, len(test_text) + 1):
 	print(f"----------------------------------------------------------------")
