@@ -6,8 +6,9 @@ import sys
 
 class Summarizer:
     """Generates summaries from input text."""
+
     @staticmethod
-    def extract_section(text: str, start_marker: str, end_marker: str | None = None) -> list[str]:
+    def extract_section(text: str, start_marker: str, end_marker = None) -> list:
         """
         Extrait chaque ligne d'une section délimitée par des marqueurs.
         """
@@ -93,7 +94,7 @@ class Summarizer:
         
         title = self.extract_section(
             summary, 
-            start_marker= "TItre", 
+            start_marker= "Titre", 
             end_marker="Concept clés"
             
         )

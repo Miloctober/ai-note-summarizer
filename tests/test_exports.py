@@ -82,13 +82,11 @@ def test_exports():
             if format_name == "anki":
                 # Anki only works with quiz data
                 filepath = exporter.export_results(format=format_name, quiz=quiz)
+
             elif format_name == "pdf":
-                # Test both summary and quiz in PDF
-                print("   📝 Testing PDF with summary...")
-                filepath1 = exporter.export_results(format=format_name, summary=summary)
-                print("   📝 Testing PDF with quiz...")
-                filepath2 = exporter.export_results(format=format_name, quiz=quiz)
-                filepath = f"{filepath1} and {filepath2}"
+                # Test PDF with both summary and quiz together
+                print("   📝 Testing PDF with both summary and quiz...")
+                filepath = exporter.export_results(format=format_name, summary=summary, quiz=quiz)
             else:
                 # Other formats can take both summary and quiz
                 filepath = exporter.export_results(format=format_name, summary=summary, quiz=quiz)

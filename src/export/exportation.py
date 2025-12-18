@@ -154,6 +154,7 @@ class Exportation:
                 pdf.multi_cell(0, 6, concepts_text, 1, 'L', True)
                 pdf.ln(5)
             
+
             if summary.source:
                 pdf.set_fill_color(233, 236, 239)  # Light gray
                 pdf.set_text_color(0, 0, 0)
@@ -164,7 +165,13 @@ class Exportation:
                 pdf.set_fill_color(255, 255, 255)
                 pdf.set_text_color(70, 70, 70)
                 pdf.set_font('Arial', '', 11)
-                pdf.multi_cell(0, 6, summary.source, 1, 'L', True)
+                
+                # Handle both string and list sources
+                if isinstance(summary.source, list):
+                    source_text = '\n'.join(summary.source)
+                else:
+                    source_text = str(summary.source)
+                pdf.multi_cell(0, 6, source_text, 1, 'L', True)
                 pdf.ln(5)
 
             # Metadata box
@@ -273,12 +280,16 @@ class Exportation:
             }
         }
         
+
+
         # Add summary data if provided
         if summary:
             export_data["summary"] = {
+                "title": summary.title,
                 "summary": summary.summary,
                 "bullet_points": summary.bullet_points,
                 "key_concepts": summary.key_concepts,
+                "source": summary.source,
                 "text_length": summary.text_length,
                 "processing_time": summary.processing_time
             }
