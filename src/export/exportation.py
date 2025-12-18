@@ -317,9 +317,37 @@ class Exportation:
         return filepath
     
 
-    def _export_to_html(self, summary: SummaryOutput = None, quiz: QuizOutput = None) -> str:
+
+    def _export_to_html(self, summary: SummaryOutput = None, quiz: QuizOutput = None, hide_answers: bool = False) -> str:
         """Export results to HTML format."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # JavaScript for answer toggle
+        toggle_script = """
+    <script>
+        function toggleAnswers() {
+            const answers = document.querySelectorAll('.answer');
+            const button = document.getElementById('toggleBtn');
+            const hidden = answers[0].style.display === 'none';
+            
+            answers.forEach(answer => {
+                answer.style.display = hidden ? 'block' : 'none';
+            });
+            
+            button.textContent = hidden ? '🔒 Hide Answers' : '👁️ Show Answers';
+        }
+        
+        function initializeAnswers() {
+            const answers = document.querySelectorAll('.answer');
+            if (""" + str(hide_answers).lower() + """) {
+                answers.forEach(answer => answer.style.display = 'none');
+                document.getElementById('toggleBtn').textContent = '👁️ Show Answers';
+            }
+        }
+        
+        window.addEventListener('load', initializeAnswers);
+    </script>
+"""
         
         html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -327,267 +355,485 @@ class Exportation:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Summary & Quiz Export</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+
         body {{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
             background-color: #f5f5f5;
         }}
+        
         .container {{
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }}
+        
         .header {{
+            background-color: #007acc;
+            color: white;
+            padding: 30px;
             text-align: center;
-            border-bottom: 3px solid #007acc;
-            padding-bottom: 20px;
+            border-radius: 8px;
             margin-bottom: 30px;
         }}
+        
         .header h1 {{
-            color: #007acc;
+            font-size: 2.5rem;
+            font-weight: bold;
             margin: 0;
-            font-size: 2.5em;
         }}
+        
         .timestamp {{
-            color: #666;
-            font-style: italic;
             margin-top: 10px;
+            font-size: 1rem;
+            opacity: 0.9;
         }}
+        
+        .main-content {{
+            padding: 0;
+        }}
+        
         .section {{
             margin-bottom: 40px;
         }}
+        
         .section-title {{
+            font-size: 1.8rem;
             color: #333;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid #007acc;
             padding-bottom: 10px;
             margin-bottom: 20px;
-            font-size: 1.8em;
         }}
+        
         .summary-text {{
-            background: #f8f9fa;
-            padding: 20px;
-            border-left: 4px solid #007acc;
-            margin: 20px 0;
-            font-size: 1.1em;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            margin: 25px 0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }}
+        
+        .summary-title {{
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+            padding: 25px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid rgba(236, 72, 153, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }}
+        
+        .summary-title h3 {{
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }}
+        
         .bullet-points {{
-            background: #e8f4f8;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 25px 0;
+            border: 1px solid rgba(34, 197, 94, 0.1);
         }}
+        
+        .bullet-points h3 {{
+            color: #059669;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }}
+        
         .bullet-points ul {{
-            margin: 0;
-            padding-left: 20px;
+            list-style: none;
+            padding: 0;
         }}
+        
         .bullet-points li {{
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-weight: 500;
+            position: relative;
+            padding-left: 30px;
         }}
-        .key-concepts {{
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }}
-        .concept-tag {{
-            display: inline-block;
-            background: #ffc107;
-            color: #000;
-            padding: 5px 12px;
-            margin: 3px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            font-weight: 500;
-        }}
-        .metadata {{
-            background: #f1f3f4;
-            padding: 15px;
-            border-radius: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }}
-        .quiz-question {{
-            background: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }}
-        .question-title {{
-            color: #007acc;
-            font-size: 1.3em;
+        
+        .bullet-points li::before {{
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #059669;
             font-weight: bold;
+            font-size: 1.1rem;
+        }}
+        
+        .key-concepts {{
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            padding: 25px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+        }}
+        
+        .key-concepts h3 {{
+            color: #d97706;
+            font-weight: 600;
             margin-bottom: 15px;
         }}
+        
+        .concept-tag {{
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 8px 16px;
+            margin: 4px 6px 4px 0;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+            transition: transform 0.2s ease;
+        }}
+        
+        .concept-tag:hover {{
+            transform: translateY(-1px);
+        }}
+        
+        .sources {{
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            padding: 25px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 1px solid rgba(168, 85, 247, 0.1);
+        }}
+        
+        .sources h3 {{
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }}
+        
+        .sources ul {{
+            list-style: none;
+            padding: 0;
+        }}
+        
+        .sources li {{
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+            font-weight: 500;
+        }}
+        
+        .sources li::before {{
+            content: '📚';
+            position: absolute;
+            left: 0;
+            font-size: 0.9rem;
+        }}
+        
+        .metadata {{
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+        }}
+        
+        .quiz-controls {{
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            border: 1px solid #cbd5e1;
+        }}
+        
+        .toggle-btn {{
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+        }}
+        
+        .toggle-btn:hover {{
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.4);
+        }}
+        
+        .quiz-question {{
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }}
+        
+        .quiz-question:hover {{
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.1),
+                0 4px 6px rgba(0, 0, 0, 0.05);
+        }}
+        
+        .question-title {{
+            color: #1e293b;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }}
+        
         .options {{
-            margin: 15px 0;
+            margin: 20px 0;
         }}
+        
         .option {{
-            background: #f8f9fa;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 5px;
-            border-left: 4px solid #007acc;
-        }}
-        .option-label {{
-            font-weight: bold;
-            color: #007acc;
-        }}
-        .answer {{
-            background: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 5px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 15px 20px;
             margin: 10px 0;
-            border-left: 4px solid #28a745;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            position: relative;
         }}
+        
+        .option:hover {{
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-color: #4f46e5;
+            transform: translateX(5px);
+        }}
+        
+        .option-label {{
+            font-weight: 700;
+            color: #4f46e5;
+            margin-right: 10px;
+        }}
+        
+        .answer {{
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }}
+        
         .difficulty {{
             display: inline-block;
-            padding: 5px 15px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
+            font-size: 0.85rem;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }}
+        
         .difficulty.easy {{
-            background: #d4edda;
-            color: #155724;
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
         }}
+        
         .difficulty.medium {{
-            background: #fff3cd;
-            color: #856404;
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            color: #92400e;
         }}
+        
         .difficulty.hard {{
-            background: #f8d7da;
-            color: #721c24;
+            background: linear-gradient(135deg, #fecaca 0%, #fbb6ce 100%);
+            color: #991b1b;
         }}
+        
         .quiz-stats {{
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 30px;
             text-align: center;
+            border: 1px solid #cbd5e1;
         }}
+        
         .stat-item {{
             display: inline-block;
-            margin: 0 20px;
-            font-weight: bold;
+            margin: 0 25px;
+            font-weight: 600;
+            color: #475569;
+            font-size: 1.1rem;
+        }}
+        
+        @media (max-width: 768px) {{
+            .container {{
+                margin: 10px;
+                border-radius: 16px;
+            }}
+            
+            .header {{
+                padding: 30px 20px;
+            }}
+            
+            .header h1 {{
+                font-size: 2.2rem;
+            }}
+            
+            .main-content {{
+                padding: 30px 20px;
+            }}
+            
+            .stat-item {{
+                display: block;
+                margin: 10px 0;
+            }}
         }}
     </style>
+    """ + toggle_script + """
 </head>
 <body>
     <div class="container">
+
         <div class="header">
             <h1>📄 AI Summary & Quiz Export</h1>
-            <div class="timestamp">Generated on: {timestamp}</div>"""
+            <div class="timestamp">Generated on: {timestamp}</div>
+        </div>
+        <div class="main-content">"""
         
         # Add summary section if provided
         if summary:
-
             html_content += f"""
-        <div class="section">
-            <h2 class="section-title">📝 Summary</h2>
-            
-            <div class="summary-text">
-                <strong>Summary:</strong><br>
-                {summary.summary}
-            </div>"""
+            <div class="section">
+                <h2 class="section-title">📝 Summary</h2>
+                
+                <div class="summary-text">
+                    <strong>Summary:</strong><br>
+                    {summary.summary}
+                </div>"""
             
             # Add title section if provided
             if summary.title:
                 html_content += f"""
-            <div class="summary-title" style="background: #f8e8f0; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #e91e63;">
-                <h3 style="color: #e91e63; margin-top: 0;">📋 Title:</h3>
-                <p style="margin: 0; font-weight: 500; color: #333;">{summary.title[0] if isinstance(summary.title, list) else summary.title}</p>
-            </div>"""
-            
-            if summary.bullet_points:
+                <div class="summary-title">
+                    <h3>📋 Title:</h3>
+                    <p style="font-weight: 500; color: #1e293b; margin: 0;">{summary.title[0] if isinstance(summary.title, list) else summary.title}</p>
+                </div>"""
+                
+                if summary.bullet_points:
+                    html_content += f"""
+                <div class="bullet-points">
+                    <h3>Key Points:</h3>
+                    <ul>"""
+                    for point in summary.bullet_points:
+                        html_content += f"<li>{point}</li>"
+                    html_content += """
+                    </ul>
+                </div>"""
+                
+                if summary.key_concepts:
+                    html_content += f"""
+                <div class="key-concepts">
+                    <h3>Key Concepts:</h3>"""
+                    for concept in summary.key_concepts:
+                        html_content += f'<span class="concept-tag">{concept}</span>'
+                    html_content += """
+                </div>"""
+                
+                # Add sources section if provided
+                if summary.source:
+                    html_content += f"""
+                <div class="sources">
+                    <h3>📚 Sources:</h3>
+                    <ul>"""
+                    for source in (summary.source if isinstance(summary.source, list) else [summary.source]):
+                        html_content += f"<li>{source}</li>"
+                    html_content += """
+                    </ul>
+                </div>"""
+                
                 html_content += f"""
-            <div class="bullet-points">
-                <h3>Key Points:</h3>
-                <ul>"""
-                for point in summary.bullet_points:
-                    html_content += f"<li>{point}</li>"
-                html_content += """
-                </ul>
-            </div>"""
-            
-            if summary.key_concepts:
-                html_content += f"""
-            <div class="key-concepts">
-                <h3>Key Concepts:</h3>"""
-
-                for concept in summary.key_concepts:
-                    html_content += f'<span class="concept-tag">{concept}</span>'
-                html_content += """
-            </div>"""
-            
-            # Add sources section if provided
-            if summary.source:
-                html_content += f"""
-            <div class="sources" style="background: #f0e8f8; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #9c27b0;">
-                <h3 style="color: #9c27b0; margin-top: 0;">📚 Sources:</h3>
-                <ul style="margin: 0; padding-left: 20px;">"""
-                for source in (summary.source if isinstance(summary.source, list) else [summary.source]):
-                    html_content += f"<li style=\"margin-bottom: 5px;\">{source}</li>"
-                html_content += """
-                </ul>
-            </div>"""
-            
-            html_content += f"""
-            <div class="metadata">
-                <strong>Metadata:</strong><br>
-                Text Length: {summary.text_length} characters<br>
-                Processing Time: {summary.processing_time:.2f} seconds
+                <div class="metadata">
+                    <strong>Metadata:</strong><br>
+                    Text Length: {summary.text_length:,} characters<br>
+                    Processing Time: {summary.processing_time:.2f} seconds
+                </div>
             </div>"""
         
         # Add quiz section if provided
         if quiz:
             html_content += f"""
-        <div class="section">
-            <h2 class="section-title">❓ Quiz</h2>
-            
-            <div class="quiz-stats">
-                <div class="stat-item">Total Questions: {quiz.total_questions}</div>
-                <div class="stat-item">Source Length: {len(quiz.source_text)} chars</div>"""
+            <div class="section">
+                <h2 class="section-title">❓ Quiz</h2>
+                
+                <div class="quiz-controls">
+                    <button id="toggleBtn" class="toggle-btn" onclick="toggleAnswers()">🔒 Hide Answers</button>
+                </div>
+                
+                <div class="quiz-stats">
+                    <div class="stat-item">📊 Total Questions: {quiz.total_questions}</div>
+                    <div class="stat-item">📝 Source Length: {len(quiz.source_text):,} chars</div>
+                </div>"""
             
             for i, question in enumerate(quiz.questions, 1):
                 html_content += f"""
-            <div class="quiz-question">
-                <div class="question-title">Question {i}: {question.question}</div>
-                
-                <div class="options">
-                    <strong>Options:</strong><br>"""
+                <div class="quiz-question">
+                    <div class="question-title">Question {i}: {question.question}</div>
+                    
+                    <div class="options">
+                        <strong>Options:</strong><br>"""
                 for j, option in enumerate(question.options):
                     option_label = chr(65 + j)  # A, B, C, D
                     html_content += f"""
-                    <div class="option">
-                        <span class="option-label">{option_label})</span> {option}
-                    </div>"""
+                        <div class="option">
+                            <span class="option-label">{option_label})</span> {option}
+                        </div>"""
                 
                 html_content += f"""
-                </div>
-                
-                <div class="answer">
-                    <strong>Answer:</strong> {question.answer}
-                </div>
-                
-                <div class="difficulty {question.difficulty}">
-                    {question.difficulty}
+                    </div>
+                    
+                    <div class="answer">
+                        <strong>✓ Answer:</strong> {question.answer}
+                    </div>
+                    
+                    <div class="difficulty {question.difficulty}">
+                        {question.difficulty}
+                    </div>
                 </div>"""
             
             html_content += """
-        </div>"""
+            </div>"""
         
         html_content += """
+        </div>
     </div>
 </body>
 </html>"""
@@ -616,12 +862,19 @@ class Exportation:
 
 """
         
+
         # Add summary section if provided
         if summary:
             markdown_content += """## 📝 Summary
 
-### Summary
 """
+            
+            # Add title if provided
+            if summary.title:
+                title_text = summary.title[0] if isinstance(summary.title, list) else summary.title
+                markdown_content += f"### Title\n{title_text}\n\n"
+            
+            markdown_content += "### Summary\n"
             markdown_content += f"{summary.summary}\n\n"
             
             if summary.bullet_points:
@@ -638,8 +891,17 @@ class Exportation:
                     markdown_content += f"`{concept}` "
                 markdown_content += "\n\n"
             
-            markdown_content += """### Metadata
-"""
+            # Add sources if provided
+            if summary.source:
+                markdown_content += "### Sources\n"
+                if isinstance(summary.source, list):
+                    for source in summary.source:
+                        markdown_content += f"- {source}\n"
+                else:
+                    markdown_content += f"- {summary.source}\n"
+                markdown_content += "\n"
+            
+            markdown_content += "### Metadata\n"
             markdown_content += f"- **Text Length:** {summary.text_length} characters\n"
             markdown_content += f"- **Processing Time:** {summary.processing_time:.2f} seconds\n\n"
             markdown_content += "---\n\n"
