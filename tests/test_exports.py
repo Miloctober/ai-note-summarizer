@@ -54,7 +54,6 @@ def create_test_data():
     
     return summary, quiz
 
-
 def test_exports():
     """Test all export formats."""
     print("🧪 Testing Export Functionality")

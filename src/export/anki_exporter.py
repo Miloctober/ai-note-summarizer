@@ -57,23 +57,19 @@ class AnkiExporter:
             cursor.execute("""
                 CREATE TABLE col (
                     id INTEGER PRIMARY KEY,
-                    crt INTEGER,
-                    mod INTEGER,
-                    scm INTEGER,
-                    ver INTEGER,
-                    dty INTEGER,
-                    usn INTEGER,
-                    ls INTEGER,
-                    conf TEXT,
-                    models TEXT,
-                    decks TEXT,
-                    dconf TEXT,
-                    tags TEXT,
-                    colgrp TEXT,
-                    mtime_sec INTEGER,
-                    mtime_usec INTEGER,
-                    mod_schema INTEGER
-                )
+                    crt INTEGER not null,
+                    mod INTEGER not null,
+                    scm INTEGER not null,
+                    ver INTEGER not null,
+                    dty INTEGER not null,
+                    usn INTEGER not null,
+                    ls INTEGER not null,
+                    conf TEXT not null,
+                    models TEXT not null,
+                    decks TEXT not null,
+                    dconf TEXT not null,
+                    tags TEXT not null
+                );
             """)
             
             # Set PRAGMA for better compatibility
@@ -84,53 +80,78 @@ class AnkiExporter:
             cursor.execute("""
                 CREATE TABLE notes (
                     id INTEGER PRIMARY KEY,
-                    guid TEXT UNIQUE,
-                    mid INTEGER,
-                    mod INTEGER,
-                    usn INTEGER,
-                    tags TEXT,
-                    flds TEXT,
-                    sfld INTEGER,
-                    csum INTEGER,
-                    flags INTEGER,
-                    data TEXT
-                )
+                    guid TEXT not null,
+                    mid INTEGER not null,
+                    mod INTEGER not null,
+                    usn INTEGER not null,
+                    tags TEXT not null,
+                    flds TEXT not null,
+                    sfld INTEGER not null,
+                    csum INTEGER not null,
+                    flags INTEGER not null,
+                    data TEXT not null
+                );
             """)
             
 
             cursor.execute("""
                 CREATE TABLE cards (
                     id INTEGER PRIMARY KEY,
-                    nid INTEGER,
-                    did INTEGER,
-                    ord INTEGER,
-                    mod INTEGER,
-                    usn INTEGER,
-                    type INTEGER,
-                    queue INTEGER,
-                    due INTEGER,
-                    ivl INTEGER,
-                    factor REAL,
-                    reps INTEGER,
-                    lapses INTEGER,
-                    left INTEGER,
-                    due_real REAL,
-                    odue INTEGER,
-                    odid INTEGER,
-                    flags INTEGER,
-                    data TEXT
-                )
+                    nid INTEGER not null,
+                    did INTEGER not null,
+                    ord INTEGER not null,
+                    mod INTEGER not null,
+                    usn INTEGER not null,
+                    type INTEGER not null,
+                    queue INTEGER not null,
+                    due INTEGER not null,
+                    ivl INTEGER not null,
+                    factor INTEGER not null,
+                    reps INTEGER not null,
+                    lapses INTEGER not null,
+                    left INTEGER not null,
+                    odue INTEGER not null,
+                    odid INTEGER not null,
+                    flags INTEGER not null,
+                    data TEXT not null
+                );
             """)
             
             cursor.execute("""
                 CREATE TABLE graves (
                     id INTEGER PRIMARY KEY,
-                    usn INTEGER,
-                    oid INTEGER,
-                    type INTEGER,
-                    mid INTEGER
-                )
+                    usn INTEGER not null,
+                    oid INTEGER not null,
+                    type INTEGER not null
+                );
             """)
+
+            cursor.execute("""
+                CREATE TABLE revlog (
+                    id INTEGER PRIMARY KEY,
+                    cid INTEGER not null,
+                    usn INTEGER not null,
+                    ease INTEGER not null,
+                    ivl INTEGER not null,
+                    lastIvl INTEGER not null,
+                    factor INTEGER not null,
+                    time INTEGER not null,
+                    type INTEGER not null
+                );
+            """)
+
+            cursor.execute("""
+                CREATE INDEX ix_cards_nid on cards (nid);
+                CREATE INDEX ix_cards_sched on cards (did, queue, due);
+                CREATE INDEX ix_cards_usn on cards (usn);
+                CREATE INDEX ix_notes_csum on notes (csum);
+                CREATE INDEX ix_notes_usn on notes (usn);
+                CREATE INDEX ix_revlog_cid on revlog (cid);
+                CREATE INDEX ix_revlog_usn on revlog (usn);
+
+            """)
+
+
 
             # Insert collection data (Anki 2.1.54+ compatible with proper versioning)
             timestamp = int(datetime.now().timestamp() * 1000)
