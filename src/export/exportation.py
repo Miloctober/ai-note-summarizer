@@ -94,11 +94,17 @@ class Exportation:
             pdf.cell(0, 12, 'SUMMARY', 0, 1, 'L', True)
             pdf.ln(5)
             
+
             # Summary text box
             pdf.set_fill_color(248, 249, 250)
             pdf.set_text_color(70, 70, 70)
+            pdf.set_font('Arial', 'B', 12)
+            pdf.cell(0, 8, 'Summary:', 0, 1, 'L', True)
+            pdf.ln(1)
+            
             pdf.set_font('Arial', '', 11)
-            pdf.multi_cell(0, 7, f'Summary:\n{summary.summary}', 1, 'L', True)
+            summary_text = summary.summary if isinstance(summary.summary, str) else ' '.join(summary.summary)
+            pdf.multi_cell(0, 6, summary_text, 1, 'L', True)
             pdf.ln(5)
             
 
@@ -207,10 +213,11 @@ class Exportation:
             pdf.cell(0, 8, f'Source Text Length: {len(quiz.source_text):,} characters', 0, 1, 'L', True)
             pdf.ln(5)
             
+
             # Quiz questions
             for i, question in enumerate(quiz.questions, 1):
                                 
-                # Question header with difficulty color
+                # Difficulty badge
                 if question.difficulty == 'easy':
                     pdf.set_fill_color(189, 243, 142)  # Light lime
                     pdf.set_text_color(21, 87, 36)  # Dark green
@@ -221,31 +228,43 @@ class Exportation:
                     pdf.set_fill_color(248, 215, 218)  # Light red
                     pdf.set_text_color(114, 28, 36)  # Dark red
                 
+                pdf.set_font('Arial', 'I', 9)
+                pdf.cell(0, 6, f'Difficulty: {question.difficulty.upper()}', 0, 1, 'L', True)
+                pdf.ln(3)
+                
+                # Question header
+                pdf.set_fill_color(255, 255, 255)
+                pdf.set_text_color(0, 122, 204)  # Blue
                 pdf.set_font('Arial', 'B', 12)
-                pdf.cell(0, 10, f'Question {i}', 0, 1, 'C', True)
+                pdf.cell(0, 10, f'Question {i}:', 0, 1, 'L', True)
                 
                 pdf.set_fill_color(255, 255, 255)
                 pdf.set_text_color(70, 70, 70)
                 pdf.set_font('Arial', '', 11)
                 pdf.multi_cell(0, 6, question.question, 1, 'L', True)
-                pdf.ln(2)
+                pdf.ln(3)
                 
                 # Options
                 pdf.set_fill_color(248, 249, 250)
                 pdf.set_text_color(70, 70, 70)
-                pdf.set_font('Arial', '', 10)
+                pdf.set_font('Arial', 'B', 10)
                 pdf.cell(0, 6, 'Options:', 0, 1, 'L', True)
+                pdf.ln(1)
                 
+                pdf.set_font('Arial', '', 10)
                 for j, option in enumerate(question.options, 1):
                     option_label = chr(64 + j)  # A, B, C, D
                     pdf.set_fill_color(255, 255, 255)
                     pdf.cell(0, 5, f'  {option_label}) {option}', 0, 1, 'L', True)
+                
+                pdf.ln(3)
                 
                 # Answer
                 pdf.set_fill_color(212, 237, 218)
                 pdf.set_text_color(21, 87, 36)
                 pdf.set_font('Arial', 'B', 11)
                 pdf.cell(0, 7, f'Answer: {question.answer}', 0, 1, 'L', True)
+                pdf.ln(5)
 
         
         # If no content was added (both summary and quiz are None)
