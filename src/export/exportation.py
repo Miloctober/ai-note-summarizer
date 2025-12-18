@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from src.export.anki_exporter import AnkiExporter
+#from .anki_exporter import AnkiExporter
 from src.summarization import Summarizer, SummaryOutput
 from src.quiz import QuizGenerator, QuizOutput
 from fpdf import FPDF
@@ -103,10 +103,10 @@ class Exportation:
             
 
             if summary.title:
-                pdf.set_fill_color(233, 236, 239)  # Light gray
-                pdf.set_text_color(0, 0, 0)
+                pdf.set_fill_color(238, 141, 189)  # Light pink
+                pdf.set_text_color(185, 20, 185)  # Dark pink
                 pdf.set_font('Arial', 'B', 14)
-                pdf.cell(0, 10, 'Title:', 0, 1, 'L', True)
+                pdf.cell(0, 10, 'Title', 0, 1, 'C', True)
                 pdf.ln(2)
 
                 pdf.set_fill_color(255, 255, 255)
@@ -124,7 +124,7 @@ class Exportation:
                 pdf.set_fill_color(232, 244, 248)  # Light blue
                 pdf.set_text_color(0, 122, 204)
                 pdf.set_font('Arial', 'B', 14)
-                pdf.cell(0, 10, 'Key Points:', 0, 1, 'L', True)
+                pdf.cell(0, 10, 'Key Points', 0, 1, 'C', True)
                 pdf.ln(2)
                 
                 pdf.set_fill_color(255, 255, 255)
@@ -143,7 +143,7 @@ class Exportation:
                 pdf.set_fill_color(255, 243, 205)  # Light yellow
                 pdf.set_text_color(133, 77, 0)  # Dark yellow
                 pdf.set_font('Arial', 'B', 14)
-                pdf.cell(0, 10, 'Key Concepts:', 0, 1, 'L', True)
+                pdf.cell(0, 10, 'Key Concepts', 0, 1, 'C', True)
                 pdf.ln(2)
                 
 
@@ -156,10 +156,10 @@ class Exportation:
             
 
             if summary.source:
-                pdf.set_fill_color(233, 236, 239)  # Light gray
-                pdf.set_text_color(0, 0, 0)
+                pdf.set_fill_color(180, 141, 239)  # Light purple
+                pdf.set_text_color(61,22, 118) # Dark purple
                 pdf.set_font('Arial', 'B', 14)
-                pdf.cell(0, 10, 'Source:', 0, 1, 'L', True)
+                pdf.cell(0, 10, 'Source', 0, 1, 'C', True)
                 pdf.ln(2)
 
                 pdf.set_fill_color(255, 255, 255)
@@ -210,23 +210,19 @@ class Exportation:
             # Quiz questions
             for i, question in enumerate(quiz.questions, 1):
                                 
-                # Difficulty badge
-                pdf.set_font('Arial', 'I', 9)
-                pdf.cell(0, 5, f'Difficulty: {question.difficulty.upper()}', 0, 1, 'L', True)
-                pdf.ln(5)
                 # Question header with difficulty color
                 if question.difficulty == 'easy':
-                    pdf.set_fill_color(212, 237, 218)  # Light green
+                    pdf.set_fill_color(189, 243, 142)  # Light lime
                     pdf.set_text_color(21, 87, 36)  # Dark green
                 elif question.difficulty == 'medium':
-                    pdf.set_fill_color(255, 243, 205)  # Light yellow
-                    pdf.set_text_color(133, 77, 0)  # Dark yellow
+                    pdf.set_fill_color(245, 200, 110)  # Light orange
+                    pdf.set_text_color(153, 51, 0)  # Dark orange
                 else:  # hard
                     pdf.set_fill_color(248, 215, 218)  # Light red
                     pdf.set_text_color(114, 28, 36)  # Dark red
                 
                 pdf.set_font('Arial', 'B', 12)
-                pdf.cell(0, 10, f'Question {i}:', 0, 1, 'L', True)
+                pdf.cell(0, 10, f'Question {i}', 0, 1, 'C', True)
                 
                 pdf.set_fill_color(255, 255, 255)
                 pdf.set_text_color(70, 70, 70)
@@ -245,7 +241,6 @@ class Exportation:
                     pdf.set_fill_color(255, 255, 255)
                     pdf.cell(0, 5, f'  {option_label}) {option}', 0, 1, 'L', True)
                 
-
                 # Answer
                 pdf.set_fill_color(212, 237, 218)
                 pdf.set_text_color(21, 87, 36)
@@ -496,6 +491,7 @@ class Exportation:
         
         # Add summary section if provided
         if summary:
+
             html_content += f"""
         <div class="section">
             <h2 class="section-title">📝 Summary</h2>
@@ -503,6 +499,14 @@ class Exportation:
             <div class="summary-text">
                 <strong>Summary:</strong><br>
                 {summary.summary}
+            </div>"""
+            
+            # Add title section if provided
+            if summary.title:
+                html_content += f"""
+            <div class="summary-title" style="background: #f8e8f0; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #e91e63;">
+                <h3 style="color: #e91e63; margin-top: 0;">📋 Title:</h3>
+                <p style="margin: 0; font-weight: 500; color: #333;">{summary.title[0] if isinstance(summary.title, list) else summary.title}</p>
             </div>"""
             
             if summary.bullet_points:
@@ -520,9 +524,22 @@ class Exportation:
                 html_content += f"""
             <div class="key-concepts">
                 <h3>Key Concepts:</h3>"""
+
                 for concept in summary.key_concepts:
                     html_content += f'<span class="concept-tag">{concept}</span>'
                 html_content += """
+            </div>"""
+            
+            # Add sources section if provided
+            if summary.source:
+                html_content += f"""
+            <div class="sources" style="background: #f0e8f8; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #9c27b0;">
+                <h3 style="color: #9c27b0; margin-top: 0;">📚 Sources:</h3>
+                <ul style="margin: 0; padding-left: 20px;">"""
+                for source in (summary.source if isinstance(summary.source, list) else [summary.source]):
+                    html_content += f"<li style=\"margin-bottom: 5px;\">{source}</li>"
+                html_content += """
+                </ul>
             </div>"""
             
             html_content += f"""
@@ -665,8 +682,8 @@ class Exportation:
         
         return filepath
 
-    def _export_to_anki(self, quiz: QuizOutput) -> str:
-        """Export quiz results to Anki .apkg format.""" 
+    """def _export_to_anki(self, quiz: QuizOutput) -> str:
+        #Export quiz results to Anki .apkg format.
         anki_exporter = AnkiExporter()
         apkg_path = anki_exporter.create_apkg(quiz)
-        return apkg_path
+        return apkg_path"""
