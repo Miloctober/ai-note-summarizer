@@ -52,8 +52,6 @@ class AnkiExporter:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         
-
-
         try:
             # Create tables (Anki 2.1.54+ compatible schema)
             cursor.execute("""

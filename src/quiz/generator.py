@@ -1,4 +1,7 @@
-from models import QuizOutput, QuizQuestion, MODEL_NAME
+
+from .models import QuizOutput, QuizQuestion, MODEL_NAME
+
+
 import random
 import ollama
 import json

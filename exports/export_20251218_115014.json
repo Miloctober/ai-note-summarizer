@@ -1,0 +1,61 @@
+{
+  "timestamp": "2025-12-18T11:50:14.982247",
+  "export_info": {
+    "generated_by": "AI Note Summarizer",
+    "version": "1.0"
+  },
+  "summary": {
+    "summary": "This is a test summary about machine learning and artificial intelligence.",
+    "bullet_points": [
+      "Machine learning is a subset of AI",
+      "Deep learning uses neural networks",
+      "Supervised learning requires labeled data"
+    ],
+    "key_concepts": [
+      "AI",
+      "ML",
+      "Neural Networks",
+      "Training Data"
+    ],
+    "text_length": 150,
+    "processing_time": 2.5
+  },
+  "quiz": {
+    "total_questions": 3,
+    "source_text_length": 53,
+    "questions": [
+      {
+        "question": "What is machine learning?",
+        "answer": "A subset of AI that enables computers to learn",
+        "options": [
+          "A programming language",
+          "A subset of AI that enables computers to learn",
+          "A database system",
+          "A web framework"
+        ],
+        "difficulty": "medium"
+      },
+      {
+        "question": "Which technique uses neural networks?",
+        "answer": "Deep learning",
+        "options": [
+          "Machine learning",
+          "Deep learning",
+          "Data mining",
+          "Statistical analysis"
+        ],
+        "difficulty": "hard"
+      },
+      {
+        "question": "Why is Jesus so cool?",
+        "answer": "I'm his dad",
+        "options": [
+          "Because he was born by God in order to transcend Humanity",
+          "Croissant",
+          "I'm his dad"
+        ],
+        "difficulty": "easy"
+      }
+    ]
+  }
+}

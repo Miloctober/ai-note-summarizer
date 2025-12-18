@@ -616,8 +616,6 @@ class Exportation:
 
 ---
 """
-        
-
         # Save markdown file
         os.makedirs("exports", exist_ok=True)
         filename = f"export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
