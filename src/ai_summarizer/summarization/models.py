@@ -9,7 +9,7 @@ class SummaryOutput:
     summary: str           # Main summary paragraph
     bullet_points: list    # List of key points
     key_concepts: list     # List of terms/concepts
-    text_legnth: int       # Original text length
+    text_length: int       # Original text length
     processing_time: float # How long it took
     source: list           # sources of doc
 

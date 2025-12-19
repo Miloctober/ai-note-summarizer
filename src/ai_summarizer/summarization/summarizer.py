@@ -173,7 +173,7 @@ def print_summary(output: SummaryOutput):
 summarizer = Summarizer()
 text_to_summarize = """League of Legends (LoL) est l'un des jeux vidéo les plus populaires et influents de la dernière décennie. Créé et publié par Riot Games en 2009, LoL est un jeu de type MOBA (Multiplayer Online Battle Arena) qui a révolutionné l'industrie du jeu vidéo et est devenu une référence dans le monde des jeux compétitifs et de l'esport. En 2025, LoL continue de dominer la scène des jeux vidéo avec une base de joueurs fidèles, un circuit compétitif de premier plan, et une influence culturelle indéniable."""
 summary_result = summarizer.summarize(text_to_summarize)  
-print_summary(summary_result)
+#print_summary(summary_result)
 
         
 """ 

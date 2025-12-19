@@ -1,8 +1,12 @@
 import os
 from datetime import datetime
 #from .anki_exporter import AnkiExporter
-from src.summarization import Summarizer, SummaryOutput
-from src.quiz import QuizGenerator, QuizOutput
+
+from ai_summarizer.summarization import Summarizer, SummaryOutput #temp try to fix src.
+from ai_summarizer.quiz import QuizGenerator, QuizOutput
+
+#from src.summarization import Summarizer, SummaryOutput
+#from src.quiz import QuizGenerator, QuizOutput
 from fpdf import FPDF
 
 class Exportation:
