@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SumarAi</title>
+
+    <style>
+        /* Reset + base styling */
+        body {margin: 0;font-family: Arial, sans-serif;height: 100vh;}
+
+        /* Top-left title */
+        .title {position: absolute;top: 20px;left: 20px;font-size: 24px;}
+
+        .title .very-bold {font-weight: 900; /* very bold */}
+
+        .title .bold {font-weight: 700; /* bold */}
+
+        /* Center container */
+        .center-container {display: flex;flex-direction: column;align-items: center;justify-content: center;height: 100%;}
+
+        /* Text input */
+        .center-container input {width: 300px;padding: 10px;font-size: 16px;margin-bottom: 15px;}
+
+        /* Buttons */
+        .buttons {display: flex;gap: 15px;}
+
+        .buttons button {padding: 15px 25px;font-size: 18px;cursor: pointer;}
+
+        .sum_btn {background-color: #40afff;color: white;font-size: 15px;padding: 12px;border: none;border-radius: 5px;cursor: pointer;}
+        .sum_btn:hover {background-color: #034796;}
+
+        .quiz_btn{background-color: #009749;color: white;font-size: 15px;padding: 12px;border: none;border-radius: 5px;cursor: pointer;}
+        .quiz_btn:hover{background-color: #004a30;}
+
+        .bot_btn{background-color: #bb00ff;color: white;font-size: 15px;padding: 12px;border: none;border-radius: 5px;cursor: pointer;}
+        .bot_btn:hover{background-color: #4b016a;}
+
+    </style>
+</head>
+<body>
+
+    <!-- Title -->
+    <div class="title">
+        <span class="very-bold">SumarAi</span>
+        <span class="bold"></span>
+    </div>
+
+    <!-- Center content -->
+    <div class="center-container">
+        <input type="text" placeholder="Enter your class or notes here">
+
+        <div class="buttons">
+            <button class="sum_btn"  name = "choice" value ="summarize"> Summarise </button>
+            <button class="quiz_btn" name = "choice" value ="quiz"> Quiz </button>
+        </div>
+        <button class="bot_btn">Both</button>
+    </div>
+
+</body>
+</html>
+
