@@ -13,7 +13,11 @@
       .error { color: #b00020; }
       .logo {position: relative;top: 25px;  left: 0px; }
       .title{font-family: Colonna MT; font-size: 1.2cm;}
-      .fixed_logo{position: fixed ; bottom: 20px ; right: 20px }
+      .fixed_logo{position: fixed ; bottom: 0px ; right: 15px }
+      .btn_athena{background-color: rgb(251, 166, 255); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px;}
+      .btn_athena:hover{background-color: rgb(249, 130, 255) ;}
+
+      .btn_athena_sel{background-color: rgb(251, 229, 252);border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px;}
     </style>
   </head>
 
@@ -29,20 +33,22 @@
 
       <div class="row">
         <!-- Run actions -->
-        <button type="submit" formaction="/run" name="action" value="summary">Summarize</button>
-        <button type="submit" formaction="/run" name="action" value="quiz">Generate Quiz</button>
-        <button type="submit" formaction="/run" name="action" value="both">Do Both</button>
-
+        <button type="submit" formaction="/run" name="action" value="summary" class="btn_athena">Summarize</button>
+        <button type="submit" formaction="/run" name="action" value="quiz" class="btn_athena">Generate Quiz</button>
+        <button type="submit" formaction="/run" name="action" value="both" class="btn_athena">Do Both</button>
+      </div>
         <!-- Export controls -->
-        <label>Export:</label>
+      <br>
+        <label style="font-family: Colonna MT ; font-size: 1cm;">  Export:</label>
 
-        <select name="export_what">
+      <div class="row">
+        <select name="export_what" class="btn_athena_sel">
           <option value="both">Summary + Quiz</option>
           <option value="summary">Summary only</option>
           <option value="quiz">Quiz only</option>
         </select>
 
-        <select name="format">
+        <select name="format" class="btn_athena_sel">
           <option value="pdf">PDF</option>
           <option value="json">JSON</option>
           <option value="html">HTML</option>
@@ -50,7 +56,7 @@
           <option value="anki">Anki (.apkg)</option>
         </select>
 
-        <button type="submit" formaction="/export">Export</button>
+        <button type="submit" formaction="/export" class="btn_athena">Export</button>
       </div>
     </form>
 
