@@ -1,0 +1,75 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8" /> 
+        <title>SumarAi</title> 
+        <style> body { font-family: Arial; max-width: 900px; margin: 40px auto; } 
+        textarea { width: 100%; height: 220px; } 
+        .row { display: flex; gap: 10px; margin-top: 10px; } 
+        button { padding: 10px 14px; cursor: pointer; } 
+        .box { margin-top: 20px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; } 
+        .error { color: #b00020; } 
+        </style> 
+    </head> 
+    <body> 
+        <h1>SumarAi</h1>
+         {% if error %} 
+         <p class="error">{{ error }}</p> 
+         {% endif %} 
+        <form method="post"> 
+            <textarea name="text" placeholder="Paste text here...">{{ text or "" }}</textarea> 
+            <div class="row"> 
+                <button type="submit" formaction="/summary">Summarize</button> 
+                <button type="submit" formaction="/quiz">Generate Quiz</button> 
+                <button type="submit" formaction="/export">Export</button> 
+            </div> 
+        </form> {% if summary %} 
+        <div class="box"> 
+            <h2>Summary</h2> 
+            {% if summary %} 
+            <div class="box"> 
+                <h2>Summary</h2> 
+                {% if title %} 
+                <h3>{{ title }}</h3> 
+                {% endif %} 
+                <p style="white-space: pre-wrap;">{{ summary }}</p> 
+                {% if bullet_points %} 
+                <h3>Points clés</h3> 
+                <ul> {% for p in bullet_points %} 
+                    <li>{{ p }}</li> 
+                    {% endfor %} 
+                </ul>
+                 {% endif %} {% if key_concepts %} 
+                 <h3>Concepts clés</h3> 
+                 <p>{{ key_concepts | join(", ") }}</p> 
+                 {% endif %} {% if sources %} 
+                 <h3>Sources</h3> 
+                 <ul> {% for s in sources %} 
+                    <li>{{ s }}</li> 
+                    {% endfor %} 
+                </ul> {% endif %} 
+            </div>
+            {% endif %} 
+        </div> 
+        {% endif %} {% if quiz %} 
+        <div class="box"> 
+            <h2>Quiz</h2> 
+            {% for q in quiz %} 
+            <div style="margin-bottom: 16px;"> 
+                <strong>{{ loop.index }}. {{ q.question }}</strong> 
+                <ul> {% for opt in q.options %} 
+                    <li>{{ opt }}</li> {% endfor %} 
+                </ul> 
+                <details> <summary>Answer</summary> 
+                    <p>{{ q.answer }}</p> 
+                    <p><em>Difficulty: {{ q.difficulty }}</em></p> 
+                </details> 
+            </div> 
+            {% endfor %} 
+        </div> 
+        {% endif %} {% if message %} 
+        <div class="box"> 
+            <p>{{ message }}</p> 
+        </div> {% endif %} 
+    </body> 
+    </html>

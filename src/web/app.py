@@ -88,10 +88,11 @@ def export():
     quiz_out = None
 
     if export_what in ("summary", "both"):
-        summary_out = summarizer.summarize(text)
+        summary_out = webapp.summarizer.summarize(text)
 
     if export_what in ("quiz", "both"):
-        quiz_out = quiz_generator.generate(text)
+        quiz_out = webapp.quiz_generator.generate(text)
+
 
     try:
         file_path = webapp.exporter.export_results(export_format, summary=summary_out, quiz=quiz_out)
