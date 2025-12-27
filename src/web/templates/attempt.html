@@ -9,7 +9,7 @@
       textarea { width: 100%; height: 220px;background-color: rgb(255, 240, 255); }
       .row { display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
       button, select { padding: 10px 14px; cursor: pointer; }
-      .box { margin-top: 20px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+      .box { background-color: rgb(254, 239, 255);  margin-top: 20px; padding: 12px; border: 1px solid #000000; border-radius: 8px; }
       .error { color: #b00020; }
       .logo {position: relative;top: 25px;  left: 0px; }
       .title{font-family: Colonna MT; font-size: 1.2cm;}
@@ -29,7 +29,7 @@
     {% endif %}
 
     <form method="post">
-      <textarea name="text" placeholder="Paste text here...">{{ text or "" }}</textarea>
+      <textarea name="text" placeholder="Paste text here..." >{{ text or "" }}</textarea>
 
       <div class="row">
         <!-- Run actions -->
@@ -37,6 +37,7 @@
         <button type="submit" formaction="/run" name="action" value="quiz" class="btn_athena">Generate Quiz</button>
         <button type="submit" formaction="/run" name="action" value="both" class="btn_athena">Do Both</button>
       </div>
+      
         <!-- Export controls -->
       <br>
         <label style="font-family: Colonna MT ; font-size: 1cm;">  Export:</label>
@@ -68,7 +69,7 @@
           <h3>{{ title }}</h3>
         {% endif %}
 
-        <p style="white-space: pre-wrap;">{{ summary }}</p>
+        <p style="white-space: pre-wrap;" >{{ summary }}</p>
 
         {% if bullet_points %}
           <h3>Points clés</h3>
