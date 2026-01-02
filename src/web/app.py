@@ -52,12 +52,13 @@ def run():
 
         if action in ("summary", "both"):
             out = webapp.summarizer.summarize(text)
+            sources = out.source.pop(0)
             ctx.update({
                 "title": (out.title[0] if isinstance(out.title, list) and out.title else out.title),
                 "summary": out.title[2],
                 "bullet_points": out.bullet_points,
                 "key_concepts": out.key_concepts,
-                "sources": out.source,
+                "sources": out.source[:],
             })
 
         if action in ("quiz", "both"):
