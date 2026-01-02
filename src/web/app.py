@@ -54,7 +54,7 @@ def run():
             out = webapp.summarizer.summarize(text)
             ctx.update({
                 "title": (out.title[0] if isinstance(out.title, list) and out.title else out.title),
-                "summary": out.summary,
+                "summary": out.title[2],
                 "bullet_points": out.bullet_points,
                 "key_concepts": out.key_concepts,
                 "sources": out.source,

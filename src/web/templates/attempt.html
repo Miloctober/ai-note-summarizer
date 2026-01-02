@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="icon" href="/static/images/SamurAi.png">
     <meta charset="UTF-8" />
     <title>SumarAi</title>
     <style>
@@ -69,7 +70,10 @@
           <h3>{{ title }}</h3>
         {% endif %}
 
-        <p style="white-space: pre-wrap;" >{{ summary }}</p>
+        {% if summary%}
+        <h3>Résumé générale</h3>
+          <p style="white-space: pre-wrap;" >{{ summary }}</p>
+        {% endif %}
 
         {% if bullet_points %}
           <h3>Points clés</h3>
@@ -84,6 +88,7 @@
           <h3>Concepts clés</h3>
           <p>{{ key_concepts | join(", ") }}</p>
         {% endif %}
+
 
         {% if sources %}
           <h3>Sources</h3>
