@@ -5,8 +5,8 @@
     <meta charset="UTF-8" />
     <title>SumarAi</title>
     <style>
-      body { font-family: Arial; max-width: 900px; margin: 40px auto; background-image:url("https://images.stockcake.com/public/f/e/7/fe708eef-def9-4d3e-b06f-f46d405fbf85/misty-sakura-mountains-stockcake.jpg"); 
-      background-size: cover; background-position: center; background-repeat: no-repeat;background-attachment: fixed;}
+      body { font-family: Arial; max-width: 900px; margin: 40px auto;  background-image:  url("https://images.stockcake.com/public/f/e/7/fe708eef-def9-4d3e-b06f-f46d405fbf85/misty-sakura-mountains-stockcake.jpg"); 
+      background-size: cover; background-position: center; background-repeat: no-repeat;background-attachment: fixed; }
       textarea { width: 100%; height: 220px;background-color: rgb(255, 240, 255); }
       .row { display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
       button, select { padding: 10px 14px; cursor: pointer; }
@@ -14,11 +14,16 @@
       .error { color: #b00020; }
       .logo {position: relative;top: 25px;  left: 0px; }
       .title{font-family: Colonna MT; font-size: 1.2cm;}
-      .fixed_logo{position: fixed ; bottom: 0px ; right: 15px }
+      .fixed_logo{position: fixed ; bottom: 0px ; right: 15px ; transform: none;}
       .btn_athena{background-color: rgb(251, 166, 255); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px;}
       .btn_athena:hover{background-color: rgb(249, 130, 255) ;}
-
       .btn_athena_sel{background-color: rgb(251, 229, 252);border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px;}
+      ::file-selector-button {
+        border: 2px solid black;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background-color: rgb(251, 229, 252);
+      } 
     </style>
   </head>
 
@@ -29,8 +34,9 @@
       <p class="error">{{ error }}</p>
     {% endif %}
 
-    <form method="post">
-      <textarea name="text" placeholder="Paste text here..." >{{ text or "" }}</textarea>
+    <form method="post" enctype="multipart/form-data">
+      <textarea name="text" placeholder="Paste text here..."style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; border-top-left-radius: 5px; border-top-right-radius: 5px;" >{{ text or "" }}</textarea >
+      <input type="file" name="pdf" action="/run" value="pdf">
 
       <div class="row">
         <!-- Run actions -->
@@ -45,11 +51,13 @@
 
       <div class="row">
         <select name="export_what" class="btn_athena_sel">
+          
+          
           <option value="both">Summary + Quiz</option>
           <option value="summary">Summary only</option>
           <option value="quiz">Quiz only</option>
         </select>
-
+        
         <select name="format" class="btn_athena_sel">
           <option value="pdf">PDF</option>
           <option value="json">JSON</option>
@@ -123,6 +131,7 @@
         {% endfor %}
       </div>
     {% endif %}
-    <img src="/static/images/Sakura.png" class="fixed_logo" width="200"> 
+      
   </body>
+  <img src="/static/images/Sakura.png" class="fixed_logo" width="200px" >
 </html>

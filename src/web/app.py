@@ -4,6 +4,7 @@ import os
 from ai_summarizer.summarization.summarizer import Summarizer
 from ai_summarizer.quiz.generator import QuizGenerator
 from ai_summarizer.export.exportation import Exportation
+from PyPDF2 import PdfReader
 
 from pathlib import Path
 from flask import Flask, render_template, request, send_file
@@ -30,9 +31,22 @@ class WebApp:
 
 webapp = WebApp()
 
+
+
 @app.route("/", methods=["GET"])
 def index():
     return render_template("attempt.html")
+
+
+def extract_text_from_pdf():
+    pdf = request.files.get("pdf")
+
+    if not pdf or pdf.filename == "":
+        return render_template("attempt.html", error="Please drop a file first.", text = "")
+    else:
+        reader = PdfReader(pdf.stream)
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+
 
 
 @app.post("/run")
@@ -40,10 +54,16 @@ def run():
     text = request.form.get("text", "").strip()
     action = request.form.get("action", "")  # summary|quiz|both
 
+    t_pdf = extract_text_from_pdf()
+    
+    if len(t_pdf) >= 100:
+        text += t_pdf
+        
     if not text:
         return render_template("attempt.html", error="Please paste some text first.", text="")
 
-    # Your original length constraint (optional)
+        
+    # length constraint
     if len(text) < 100:
         return render_template("attempt.html", error="Text given is too short (min 100 chars).", text=text)
 
@@ -51,14 +71,14 @@ def run():
         ctx = {"text": text}
 
         if action in ("summary", "both"):
-            out = webapp.summarizer.summarize(text)
+            out = webapp.summarizer.summarize(text) 
             sources = out.source.pop(0)
             ctx.update({
                 "title": (out.title[0] if isinstance(out.title, list) and out.title else out.title),
                 "summary": out.title[2],
                 "bullet_points": out.bullet_points,
                 "key_concepts": out.key_concepts,
-                "sources": out.source[:],
+                "sources": out.source,
             })
 
         if action in ("quiz", "both"):
@@ -105,6 +125,9 @@ def export():
 
     except ValueError as e:
         return render_template("attempt.html", error=str(e), text=text)
+
+
+
 
 
 if __name__ == "__main__":
