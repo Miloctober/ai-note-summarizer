@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-#from .anki_exporter import AnkiExporter
 from src.summarization import Summarizer, SummaryOutput
 from src.quiz import QuizGenerator, QuizOutput
 from fpdf import FPDF
@@ -26,7 +25,6 @@ class Exportation:
         - JSON: Structured data for summaries and/or quizzes.
         - HTML: Web-friendly format for summaries and/or quizzes.
         - Markdown: Markdown formatted text for summaries and/or quizzes.
-        - Anki: .apkg file for quiz flashcards (Question/Answer).
                 
         Returns:
             Path to exported file or file content as string
@@ -34,10 +32,7 @@ class Exportation:
         Raises:
             ValueError: If format is not supported
         """
-
-        if format == "anki":
-            return self._export_to_anki(quiz)
-        elif format == "pdf":
+        if format == "pdf":
             return self._export_to_pdf(summary, quiz)
         elif format == "json":
             return self._export_to_json(summary, quiz)
@@ -954,9 +949,3 @@ class Exportation:
             f.write(markdown_content)
         
         return filepath
-
-    """def _export_to_anki(self, quiz: QuizOutput) -> str:
-        #Export quiz results to Anki .apkg format.
-        anki_exporter = AnkiExporter()
-        apkg_path = anki_exporter.create_apkg(quiz)
-        return apkg_path"""

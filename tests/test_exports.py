@@ -3,7 +3,11 @@
 
 import sys
 import os
-sys.path.append('/Users/milothegod/ai-note-summarizer')
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from src.summarization.models import SummaryOutput
 from src.quiz.models import QuizOutput, QuizQuestion
@@ -41,9 +45,9 @@ def create_test_data():
             difficulty="hard"
         ),
         QuizQuestion(
-            question="Why is Jesus so cool?",
-            answer="I'm his dad",
-            options=["Because he was born by God in order to transcend Humanity", "Croissant", "I'm his dad"],
+            question="What's SumarAI's favourite food?",
+            answer="Sushi!",
+            options=["Sushi!", "The existential and introspective questioning of UniGe students.", "Answer B"],
             difficulty="easy"
         )
     ]
@@ -69,21 +73,17 @@ def test_exports():
     
     # Ensure we're running from the correct directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir('/Users/milothegod/ai-note-summarizer')
+    os.chdir(str(REPO_ROOT))
     
     # Test formats
-    formats = ["json", "markdown", "html", "pdf", "anki"]
+    formats = ["json", "markdown", "html", "pdf"]
     
     for format_name in formats:
         try:
             print(f"\n📤 Testing {format_name.upper()} export...")
             
             # Export based on format
-            if format_name == "anki":
-                # Anki only works with quiz data
-                filepath = exporter.export_results(format=format_name, quiz=quiz)
-
-            elif format_name == "pdf":
+            if format_name == "pdf":
                 # Test PDF with both summary and quiz together
                 print("   📝 Testing PDF with both summary and quiz...")
                 filepath = exporter.export_results(format=format_name, summary=summary, quiz=quiz)
