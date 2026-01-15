@@ -1,8 +1,9 @@
-from src.quiz.models import QuizOutput, QuizQuestion, MODEL_NAME
+from .models import QuizOutput, QuizQuestion, MODEL_NAME
 import random
-import ollama
+from ollama import Client
 import json
 import math
+import sys
 
 WORDS_PER_CHUNK = 1000      # number of words per chunk of text
 OVERLAP = 100               # number of words that will overlap in each chunk
@@ -84,15 +85,23 @@ class QuizGenerator:
 			- If a question or its options are invalid, it is discarded
 			- For each question, keep in memory some keywords to make sure to not have duplicates questions
 		'''
+		sys.stdout.reconfigure(encoding='utf-8')								# set the standard output to UTF-8 to avoid non-ascii characters
+		api_key = "a50f2515799945cfbb25504bdd11c0d8.pAHwL9T4vWades4eXr1TeqDt"	# This is the API key to use an ollama LLM from the cloud
+		if api_key is None:														# check if the key exist
+			raise ValueError("Ollama API key is inexistent.")
+		client = Client(														# create an ollama API client that sends the API key to authorize the use of an ollama LLM
+			host = "https://ollama.com",
+			headers={'Authorization': 'Bearer ' + api_key}
+		)
+
 		if (not isinstance(text, str)):								# check if text is a string, is empty or is too short
 			raise TypeError("Text given is not of string type.")
 		if ((not text) or (not text.strip())):
 			raise ValueError("Text given is empty.")
-		
 		text = text.strip()
 		if (len(text) < 100):
 			raise ValueError("Text given is too short.")
-		
+
 		nb_words = len(text.split())												# count the number of words in the text
 		nb_questions = max(1, min(self.max_questions, nb_words // 100 or 1))		# calculate the number of questions based on the number of words (1 question for 100 words)
 
@@ -109,7 +118,8 @@ class QuizGenerator:
 			q_to_request = min(per_chunk_questions, remaining)		# check the number of question for this chunk
 
 			system_prompt = (
-				"You are an expert educator. You create concise, factual multiple-choice questions from the provided material."
+				"You are an expert educator. You create concise, factual multiple-choice questions from the provided material. "
+				"IMPORTANT: Always respond in the exact same language as the source material provided. Detect the language and use it throughout your response."
 			)																														# System prompt sets the overall behavior of the LLM
 
 			user_prompt = (
@@ -117,16 +127,18 @@ class QuizGenerator:
 				f"Return up to {q_to_request} multiple-choice questions as JSON with this schema:\n"
 				'{ "questions": [ { "question": str, "answer": str, "options": [str, str, str, str], '
 				'"difficulty": "easy" | "medium" | "hard", "keywords": [str, str, str] } ] }\n'
-				"Use only facts from the source. keep questions clear and non-overlapping. "
-				"Ignore page numbers, headers/footers, boilerplate disclaimers, tables of contents, and formatting artifacts (e.g., 'Page 1/10', timestamps, URLs, references, hyphenated line breaks). "
+				"LANGUAGE REQUIREMENT: All questions, answers, options, and keywords MUST be in the same language as the source material above.\n"
+				"Use only facts from the source. Keep questions clear and non-overlapping. "
+				"Ignore page numbers, headers/footers, boilerplate disclaimers, tables of contents, and formatting artifacts and sources (e.g., 'Page 1/10', timestamps, URLs, references, hyphenated line breaks). "
    				"Use only sentences that convey instructional facts; skip fragments or repeated noise text. "
-				"Always provide at least 4 options including the correct answer."
-				f"Avoid overlapping with these already asked topics: {summary}."
-				"Don't put the answer of the question in the question"
+				"Always provide at least 4 options including the correct answer. "
+				f"Avoid overlapping with these already asked topics: {summary}. "
+				"Don't put the answer of the question in the question itself. "
+				"Return only raw JSON. Do not wrap in markdown or code fences."
 				)																													# User Prompt is the specific task the LLM has to do
 
 			try:
-				response = ollama.chat(
+				response = client.chat(
 					model = self.model_name,									# specify which model to use
 					format = "json",											# return a JSON
 					messages =[
@@ -134,6 +146,9 @@ class QuizGenerator:
 						{"role" : "user", "content" : user_prompt}				# user message containing the task and the data
 					]
 				)
+				# print("RAW:", response)												# For debugging
+				# print("CONTENT:", response.get("message", {}).get("content"))
+
 			except Exception:
 				raise RuntimeError("Ollama generation failed")
 			

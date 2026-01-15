@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-MODEL_NAME = "llama3:8b"
+MODEL_NAME = "gpt-oss:20b-cloud"
 
 @dataclass
 class QuizQuestion:
