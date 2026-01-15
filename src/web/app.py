@@ -1,9 +1,9 @@
 import sys
 import os
 
-from ai_summarizer.summarization.summarizer import Summarizer
-from ai_summarizer.quiz.generator import QuizGenerator
-from ai_summarizer.export.exportation import Exportation
+from src.summarization.summarizer import Summarizer
+from src.quiz.generator import QuizGenerator
+from src.export.exportation import Exportation
 from PyPDF2 import PdfReader
 
 from pathlib import Path
