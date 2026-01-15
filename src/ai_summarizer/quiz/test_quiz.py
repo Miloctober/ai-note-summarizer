@@ -1,6 +1,5 @@
-from generator import QuizGenerator
-from test_text import test_text
-from src.quiz.models import QuizOutput, QuizQuestion, MODEL_NAME
+from ai_summarizer.quiz.generator import QuizGenerator
+from ai_summarizer.quiz.test_text import test_text
 
 for i in range (1, len(test_text) + 1):
 	print(f"----------------------------------------------------------------")
