@@ -95,7 +95,7 @@ def run():
 @app.post("/export")
 def export():
     text = request.form.get("text", "").strip()
-    export_format = request.form.get("format", "pdf")   # pdf|json|html|markdown
+    export_format = request.form.get("format", "pdf")   # pdf|json|html|markdown|anki
     export_what = request.form.get("export_what", "both")  # summary|quiz|both
 
     if not text:
