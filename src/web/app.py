@@ -42,7 +42,7 @@ def extract_text_from_pdf():
     pdf = request.files.get("pdf")
 
     if not pdf or pdf.filename == "":
-        return render_template("attempt.html", error="Please drop a file first.", text = "")
+        return "None"
     else:
         reader = PdfReader(pdf.stream)
         return "\n".join(page.extract_text() or "" for page in reader.pages)
@@ -55,7 +55,7 @@ def run():
     action = request.form.get("action", "")  # summary|quiz|both
 
     t_pdf = extract_text_from_pdf()
-    
+ 
     if len(t_pdf) >= 100:
         text += t_pdf
         
