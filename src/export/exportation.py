@@ -10,6 +10,29 @@ class Exportation:
         """Initialize the exportation class."""
         pass
     
+    def _sanitize_text_for_pdf(self, text: str) -> str:
+        """Sanitize text to remove Unicode characters that cause PDF encoding issues."""
+        if not text:
+            return text
+        
+        # Replace common Unicode punctuation with ASCII equivalents
+        replacements = {
+            '\u2019': "'",  # right single quotation mark
+            '\u2018': "'",  # left single quotation mark
+            '\u201c': '"',  # left double quotation mark
+            '\u201d': '"',  # right double quotation mark
+            '\u2026': '...',  # horizontal ellipsis
+            '\u2013': '-',  # en dash
+            '\u2014': '--',  # em dash
+            '\u00a0': ' ',  # non-breaking space
+            '\u00b0': '°',  # degree sign (usually supported)
+        }
+        
+        for unicode_char, ascii_char in replacements.items():
+            text = text.replace(unicode_char, ascii_char)
+        
+        return text
+    
 
     def export_results(self, format: str, summary: SummaryOutput = None, quiz: QuizOutput = None) -> str:
         """
@@ -51,8 +74,8 @@ class Exportation:
         if not summary and not quiz:
             raise ValueError("At least one of summary or quiz must be provided for PDF export")
 
-        # Create PDF instance with better styling
-        pdf = FPDF()
+        # Create PDF instance with UTF-8 encoding
+        pdf = FPDF(encoding='utf-8')
         pdf.add_page()
         
         # Define colors
@@ -99,6 +122,7 @@ class Exportation:
             
             pdf.set_font('Arial', '', 11)
             summary_text = summary.summary if isinstance(summary.summary, str) else ' '.join(summary.summary)
+            summary_text = self._sanitize_text_for_pdf(summary_text)
             pdf.multi_cell(0, 6, summary_text, 1, 'L', True)
             pdf.ln(5)
             
@@ -117,6 +141,7 @@ class Exportation:
                     title_text = summary.title[0]
                 else:
                     title_text = summary.title
+                title_text = self._sanitize_text_for_pdf(title_text)
                 pdf.multi_cell(0, 6, title_text, 1, 'L', True)
                 pdf.ln(5)
             
@@ -133,7 +158,8 @@ class Exportation:
 
                 pdf.set_font('Arial', '', 11)
                 for i, point in enumerate(summary.bullet_points, 1):
-                    pdf.multi_cell(0, 6, f'- {point}', 1, 'L', True)
+                    sanitized_point = self._sanitize_text_for_pdf(point)
+                    pdf.multi_cell(0, 6, f'- {sanitized_point}', 1, 'L', True)
                     if i < len(summary.bullet_points):
                         pdf.ln(1)
                 pdf.ln(5)
@@ -152,6 +178,7 @@ class Exportation:
                 pdf.set_text_color(70, 70, 70)
                 pdf.set_font('Arial', '', 11)
                 concepts_text = ' - '.join([f'"{concept}"' for concept in summary.key_concepts])
+                concepts_text = self._sanitize_text_for_pdf(concepts_text)
                 pdf.multi_cell(0, 6, concepts_text, 1, 'L', True)
                 pdf.ln(5)
             
@@ -172,6 +199,7 @@ class Exportation:
                     source_text = '\n'.join(summary.source)
                 else:
                     source_text = str(summary.source)
+                source_text = self._sanitize_text_for_pdf(source_text)
                 pdf.multi_cell(0, 6, source_text, 1, 'L', True)
                 pdf.ln(5)
 
@@ -236,7 +264,8 @@ class Exportation:
                 pdf.set_fill_color(255, 255, 255)
                 pdf.set_text_color(70, 70, 70)
                 pdf.set_font('Arial', '', 11)
-                pdf.multi_cell(0, 6, question.question, 1, 'L', True)
+                sanitized_question = self._sanitize_text_for_pdf(question.question)
+                pdf.multi_cell(0, 6, sanitized_question, 1, 'L', True)
                 pdf.ln(3)
                 
                 # Options
@@ -249,8 +278,9 @@ class Exportation:
                 pdf.set_font('Arial', '', 10)
                 for j, option in enumerate(question.options, 1):
                     option_label = chr(64 + j)  # A, B, C, D
+                    sanitized_option = self._sanitize_text_for_pdf(option)
                     pdf.set_fill_color(255, 255, 255)
-                    pdf.cell(0, 5, f'  {option_label}) {option}', 0, 1, 'L', True)
+                    pdf.cell(0, 5, f'  {option_label}) {sanitized_option}', 0, 1, 'L', True)
                 
                 pdf.ln(3)
                 
@@ -258,7 +288,8 @@ class Exportation:
                 pdf.set_fill_color(212, 237, 218)
                 pdf.set_text_color(21, 87, 36)
                 pdf.set_font('Arial', 'B', 11)
-                pdf.cell(0, 7, f'Answer: {question.answer}', 0, 1, 'L', True)
+                sanitized_answer = self._sanitize_text_for_pdf(question.answer)
+                pdf.cell(0, 7, f'Answer: {sanitized_answer}', 0, 1, 'L', True)
                 pdf.ln(5)
 
         
