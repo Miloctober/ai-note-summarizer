@@ -7,13 +7,12 @@ import sys
 
 WORDS_PER_CHUNK = 1000      # number of words per chunk of text
 OVERLAP = 100               # number of words that will overlap in each chunk
+MAX_SUMMARY_LEN = 20		# max number of element in the summary list
 
 class QuizGenerator:
 
-	def __init__(self, model_name = MODEL_NAME, max_questions = 30):
+	def __init__(self, model_name = MODEL_NAME):
 		self.model_name = model_name
-		self.max_questions = max_questions
-
 
 	def normalize_options(self, answer, options):
 		'''
@@ -79,7 +78,7 @@ class QuizGenerator:
 		:rtype: QuizOutput
 
 		Notes: 
-			- The number of questions is dynamically determined based on the length of the text (for a maximum of 'self.max_questions' questions)
+			- The number of questions is dynamically determined based on the length of the text
 			- Questions are generated in chunks to not go over the limit of Tokens
 			- Each questions has exactly 4 options to choose from, including the right answer
 			- If a question or its options are invalid, it is discarded
@@ -103,7 +102,7 @@ class QuizGenerator:
 			raise ValueError("Text given is too short.")
 
 		nb_words = len(text.split())												# count the number of words in the text
-		nb_questions = max(1, min(self.max_questions, nb_words // 100 or 1))		# calculate the number of questions based on the number of words (1 question for 100 words)
+		nb_questions = max(1, nb_words // 100 or 1)		# calculate the number of questions based on the number of words (1 question for 100 words)
 
 		per_chunk_questions = max(1, math.ceil(nb_questions / (nb_words / (WORDS_PER_CHUNK - OVERLAP))))	# calculate the number of questions we need per chunk
 		remaining = nb_questions																			# keep track of the remaining number of question we have
@@ -187,7 +186,10 @@ class QuizGenerator:
 							t = k.strip().lower()
 							if t:
 								norm_keywords.append(t)
-					summary = "; ".join(norm_keywords[:3])								# add the keywords to the summary the LLM will read
+
+					summary.append("; ".join(norm_keywords[:3]))			# add the keywords to the summary the LLM will read
+					if (len(summary) > MAX_SUMMARY_LEN):					# if the summary is too long (takes too many token), remove first element in (FIFO)
+						summary.pop(0)
 
 			if (not questions):
 				raise RuntimeError("No valid questions were generated")
