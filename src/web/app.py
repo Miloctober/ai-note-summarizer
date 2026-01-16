@@ -9,6 +9,8 @@ from PyPDF2 import PdfReader
 from pathlib import Path
 from flask import Flask, render_template, request, send_file
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 app = Flask(__name__)
 
 
