@@ -1,0 +1,9 @@
+# Core dependencies
+ollama
+fpdf
+PyPDF2
+flask
+
+
+# HTTP / utils (si utilisés)
+requests
